@@ -1,0 +1,20 @@
+class Solution:
+    def countPalindromicSubsequence(self, s):
+        n = len(s)
+        result = 0
+        
+        # For each character 'a' to 'z'
+        for i in range(26):
+            c = chr(ord('a') + i)
+            
+            # Find first and last positions
+            first = s.find(c)
+            last = s.rfind(c)
+            
+            # Must have at least 2 occurrences with gap > 1
+            if first != -1 and last - first > 1:
+                # Get unique characters in between
+                between = set(s[first+1:last])
+                result += len(between)
+        
+        return result
