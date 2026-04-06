@@ -1,0 +1,45 @@
+class Solution:
+    def maxSumDivThree(self, nums):
+        # Group numbers by their remainder when divided by 3
+        remainder1 = []
+        remainder2 = []
+        total = 0
+        
+        for num in nums:
+            total += num
+            if num % 3 == 1:
+                remainder1.append(num)
+            elif num % 3 == 2:
+                remainder2.append(num)
+        
+        # Sort to remove smallest values when needed
+        remainder1.sort()
+        remainder2.sort()
+        
+        remainder = total % 3
+        
+        if remainder == 1:
+            # Remove one element with remainder 1 OR two elements with remainder 2
+            option1 = float('inf')
+            option2 = float('inf')
+            
+            if remainder1:
+                option1 = remainder1[0]
+            if len(remainder2) >= 2:
+                option2 = remainder2[0] + remainder2[1]
+            
+            total -= min(option1, option2)
+            
+        elif remainder == 2:
+            # Remove one element with remainder 2 OR two elements with remainder 1
+            option1 = float('inf')
+            option2 = float('inf')
+            
+            if remainder2:
+                option1 = remainder2[0]
+            if len(remainder1) >= 2:
+                option2 = remainder1[0] + remainder1[1]
+            
+            total -= min(option1, option2)
+        
+        return total
