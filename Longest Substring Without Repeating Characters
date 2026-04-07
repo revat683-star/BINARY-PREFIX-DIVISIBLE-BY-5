@@ -1,0 +1,25 @@
+int lengthOfLongestSubstring(char* s) {
+    // Using sliding window with hash set (128 for ASCII chars)
+    int seen[128] = {0};
+    int left = 0;
+    int max_length = 0;
+    
+    for (int right = 0; s[right] != '\0'; right++) {
+        // If char seen in current window, move left pointer
+        while (seen[(unsigned char)s[right]] > 0) {
+            seen[(unsigned char)s[left]]--;
+            left++;
+        }
+        
+        // Mark current char as seen
+        seen[(unsigned char)s[right]]++;
+        
+        // Update max length
+        int current_length = right - left + 1;
+        if (current_length > max_length) {
+            max_length = current_length;
+        }
+    }
+    
+    return max_length;
+}
