@@ -1,0 +1,51 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    // Hash map using array (since nums[i] range is limited)
+    // Using dynamic approach with O(n) space
+    
+    // Create a hash table with key-value pairs
+    typedef struct {
+        int key;
+        int value;
+        int used;
+    } HashEntry;
+    
+    HashEntry* hashTable = (HashEntry*)calloc(100000, sizeof(HashEntry));
+    int hashSize = 100000;
+    
+    int* result = (int*)malloc(2 * sizeof(int));
+    *returnSize = 2;
+    
+    for (int i = 0; i < numsSize; i++) {
+        int complement = target - nums[i];
+        int index = (complement % hashSize + hashSize) % hashSize;
+        
+        // Search in hash table
+        for (int j = 0; j < hashSize; j++) {
+            int idx = (index + j) % hashSize;
+            if (hashTable[idx].used && hashTable[idx].key == complement) {
+                result[0] = hashTable[idx].value;
+                result[1] = i;
+                free(hashTable);
+                return result;
+            }
+        }
+        
+        // Insert current element
+        int insertIndex = (nums[i] % hashSize + hashSize) % hashSize;
+        for (int j = 0; j < hashSize; j++) {
+            int idx = (insertIndex + j) % hashSize;
+            if (!hashTable[idx].used) {
+                hashTable[idx].key = nums[i];
+                hashTable[idx].value = i;
+                hashTable[idx].used = 1;
+                break;
+            }
+        }
+    }
+    
+    free(hashTable);
+    return result;
+}
