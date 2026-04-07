@@ -1,0 +1,47 @@
+// Function prototype - declare before using
+int expandAroundCenter(char* s, int left, int right);
+
+char* longestPalindrome(char* s) {
+    if (s == NULL || s[0] == '\0') {
+        char* empty = (char*)malloc(1);
+        empty[0] = '\0';
+        return empty;
+    }
+    
+    int start = 0;
+    int end = 0;
+    int len1, len2, length;
+    
+    for (int i = 0; s[i] != '\0'; i++) {
+        // Odd length palindrome
+        len1 = expandAroundCenter(s, i, i);
+        // Even length palindrome
+        len2 = expandAroundCenter(s, i, i + 1);
+        
+        length = (len1 > len2) ? len1 : len2;
+        
+        if (length > end - start + 1) {
+            start = i - (length - 1) / 2;
+            end = i + length / 2;
+        }
+    }
+    
+    // Extract substring
+    int resultLen = end - start + 1;
+    char* result = (char*)malloc(resultLen + 1);
+    for (int i = 0; i < resultLen; i++) {
+        result[i] = s[start + i];
+    }
+    result[resultLen] = '\0';
+    
+    return result;
+}
+
+// Function definition after main function
+int expandAroundCenter(char* s, int left, int right) {
+    while (left >= 0 && s[right] != '\0' && s[left] == s[right]) {
+        left--;
+        right++;
+    }
+    return right - left - 1;
+}
